@@ -1,0 +1,26 @@
+{
+  "name": "token-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "openzeppelin-solidity": "^2.5.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArtemVoronov/token-generator.git"
+  },
+  "author": "Artem Voronov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArtemVoronov/token-generator/issues"
+  },
+  "homepage": "https://github.com/ArtemVoronov/token-generator#readme"
+}
