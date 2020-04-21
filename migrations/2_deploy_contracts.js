@@ -1,5 +1,5 @@
-var SimpleERC20Token = artifacts.require("./SimpleERC20Token.sol");
+var SimpleERC20TokenWithTimeLock = artifacts.require("./SimpleERC20TokenWithTimeLock.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(SimpleERC20Token);
+  deployer.deploy(SimpleERC20TokenWithTimeLock);
 };
