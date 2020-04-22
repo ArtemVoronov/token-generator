@@ -39,4 +39,8 @@ contract SimpleERC20TokenWithTimeLock is SimpleERC20Token {
     lockTimeInMinutes = _minutes;
     lastTokenGenerationDateTime = now;
   }
+
+  function getLastTokenGenerationDateTime() public view returns (uint) {
+    return lastTokenGenerationDateTime;
+  }
 }

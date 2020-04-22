@@ -20,3 +20,11 @@
 .App-link {
   color: #09d3ac;
 }
+
+.transferTokenButton {
+  background-color: green;
+  color: white;
+  padding: 10px;
+  margin: 10px;
+  font-size: 18px;
+}
