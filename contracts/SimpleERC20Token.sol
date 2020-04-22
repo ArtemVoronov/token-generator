@@ -7,7 +7,7 @@ contract SimpleERC20Token is ERC20, Ownable {
   string public constant name = 'Simple Test Token';
   string public constant symbol = 'STT';
   uint8 public constant decimals = 2;
-  uint constant _initial_supply = 1000000;
+  uint constant _initial_supply = 100000;
 
   constructor() public {
     _mint(msg.sender, _initial_supply);

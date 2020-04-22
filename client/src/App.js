@@ -12,10 +12,10 @@ class App extends Component {
       web3: null,
       accounts: null,
       contract: null,
-      balanceOfAccount0: null,
-      balanceOfAccount1: null,
+      balanceOfUserAccount: null,
       lockTimeInMinutes: 20,
       showError: false,
+      debugInfoLoaded: false,
       errorMessage: ""
     };
   }
@@ -30,10 +30,10 @@ class App extends Component {
       const accounts = await web3.eth.getAccounts();
 
       // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
+      // const networkIdW = await web3.eth.net.getId();//TODO: should it be like that ot hardcoded?
+      const networkId = "3";
       const deployedNetwork = SimpleERC20TokenWithTimeLock.networks[networkId];
       const instance = new web3.eth.Contract(SimpleERC20TokenWithTimeLock.abi,deployedNetwork && deployedNetwork.address);
-      //TODO: initialize contract from Ropsten address
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
@@ -47,20 +47,20 @@ class App extends Component {
 
   render() {
     let self = this;
-    if (!self.state.web3) {
+    if (!self.state.web3 && !self.state.contract) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
         <div className="App">
           <div>
-            <h1>Token generation with time lock example!</h1>
-            <div>Transfer 1 token from account0 to account1</div>
+            <h1>Token generation with time lock example</h1>
+            <div>Press the button for obtaining the 1 token</div>
             <br/>
-            <button className="transferTokenButton" onClick={self.transferToken}>Transfer 1 token</button>
+            <button className="transferTokenButton" onClick={self.transferToken}>Obtain 1 token</button>
             <br/>
             {self.state.showError && (<div className="errorMessage">{self.state.errorMessage}</div>)}
             <br/>
-            {self.renderDebugInfo()}
+            {self.state.debugInfoLoaded && (self.renderDebugInfo())}
           </div>
         </div>
     );
@@ -70,24 +70,25 @@ class App extends Component {
     let self = this;
     return (
         <div>
-          <div>Balance of account0: {self.state.balanceOfAccount0} tokens</div>
-          <br/>
-          <div>Balance of account1: {self.state.balanceOfAccount1} tokens</div>
-          <br/>
+          <h1>Debug Info</h1>
           <div>Total supply: {self.state.totalSupply} tokens</div>
           <br/>
+          <div>Balance of user account: {self.state.balanceOfUserAccount} tokens</div>
+          <br/>
+          <div>User account address: {self.state.accounts[0]}</div>
+          <br/>
+          <div>Contract address: {self.state.contract._address}</div>
+          <br/>
           <div>Contract owner: {self.state.owner}</div>
-          <br/>
-          <div>Account0 address: {self.state.accounts[0]}</div>
-          <br/>
-          <div>Account1 address: {self.state.accounts[1]}</div>
           <br/>
           <div>Last token generation event date: {self.state.lastTokenGenerationEventDateTime}</div>
           <br/>
           <div>Next available token generation date: {self.state.nextAvailableTokenExtractionDateTime}</div>
           <br/>
-          <button className="changeTimeLockButton" onClick={()=>self.changeTimeLockToOneMinute(1)}>Change time lock to 1 minute</button>
           <br/>
+          <br/>
+          <div>The following actions will work only for contract owner:</div>
+          <button className="changeTimeLockButton" onClick={()=>self.changeTimeLockToOneMinute(1)}>Change time lock to 1 minute</button>
           <button className="changeTimeLockButton" onClick={()=>self.changeTimeLockToOneMinute(20)}>Change time lock to 20 minute</button>
         </div>
     );
@@ -95,16 +96,15 @@ class App extends Component {
 
   transferToken = async () => {
     let self = this;
-    const { accounts, contract } = self.state;
+    const { accounts, contract, web3 } = self.state;
     try {
-      await contract.methods.transfer(accounts[1], 100).send({ from: accounts[0] });
-      setTimeout(self.updateDebugInfo, 1000);
-      self.hideErrorMessage();
+      await contract.methods.generateElseOneToken().send({from: accounts[0]}).then(() => {
+        self.updateDebugInfo();
+        self.hideErrorMessage();
+      }).catch((error) => {
+        console.log(error);
+      })
     } catch (error) {
-      if (error.message.indexOf("TIME_LOCK_ERROR") !== -1) {
-        self.showErrorMessage(`Please wait ${self.state.lockTimeInMinutes} minutes scince the last token generation event`)
-        return;
-      }
       console.error(error);
     }
   }
@@ -132,22 +132,19 @@ class App extends Component {
     let self = this;
     const { accounts, contract } = self.state;
 
-    // Get the value from the contract to prove it worked.
-    const balanceOfAccount0 = await contract.methods.balanceOf(accounts[0]).call();
-    const balanceOfAccount1 = await contract.methods.balanceOf(accounts[1]).call();
-    const decimals = await contract.methods.decimals().call();
+    const balanceOfUserAccount = await contract.methods.balanceOf(accounts[0]).call();
     const owner = await contract.methods.owner().call();
+    const decimals = await contract.methods.decimals().call();
     const totalSupply = await contract.methods.totalSupply().call();
-    const lastTokenGenerationEventDateTime = await contract .methods.getLastTokenGenerationDateTime().call();
+    const lastTokenGenerationEventDateTime = await contract.methods.getLastTokenGenerationDateTime().call();
 
-    // Update state with the result.
     self.setState({
       lastTokenGenerationEventDateTime: new Date(lastTokenGenerationEventDateTime*1000).toLocaleString(),
       nextAvailableTokenExtractionDateTime: new Date(lastTokenGenerationEventDateTime*1000 + self.state.lockTimeInMinutes*60*1000).toLocaleString(),
-      balanceOfAccount0: balanceOfAccount0 / Math.pow(10, decimals),
-      balanceOfAccount1: balanceOfAccount1 / Math.pow(10, decimals),
+      balanceOfUserAccount: balanceOfUserAccount / Math.pow(10, decimals),
       owner: owner,
-      totalSupply: totalSupply / Math.pow(10, decimals)
+      totalSupply: totalSupply / Math.pow(10, decimals),
+      debugInfoLoaded: true
     });
   };
 }

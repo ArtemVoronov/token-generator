@@ -1,16 +1,19 @@
 # Token generator example with time lock
-Smart contract:
+It is simple example of ERC20 token generation with time lock. It allows you to obtain 1 token 1 time per 20 minutes. It consists of 2 parts:
+
+1.Smart contract based on openzeppeling library:
 ```
-https://github.com/ArtemVoronov/token-generator/blob/master/contracts/SimpleERC20TokenWithTimeLock.sol
+contracts/SimpleERC20TokenWithTimeLock.sol
 ```
-Web UI based on React:
+2.Web UI based on React:
 ```
-https://github.com/ArtemVoronov/token-generator/tree/master/client
+/client
 ```
 # How to use it
+You will require to install the MetaMask extenstion in your browser. Then run the following commands in a terminal:
 ```
-1. run ganache on localhost:7545
-2. cd /client
-3. npm install
-4. npm start
+git clone git@github.com:ArtemVoronov/token-generator.git
+cd token-generator/client
+npm install
+npm start
 ```
