@@ -28,3 +28,11 @@
   margin: 10px;
   font-size: 18px;
 }
+
+.changeTimeLockButton {
+  background-color: orange;
+  color: white;
+  padding: 10px;
+  margin: 10px;
+  font-size: 18px;
+}

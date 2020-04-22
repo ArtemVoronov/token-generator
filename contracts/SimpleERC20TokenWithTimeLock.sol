@@ -25,12 +25,14 @@ contract SimpleERC20TokenWithTimeLock is SimpleERC20Token {
 
   //just add time lock for direct token sending
   function transfer(address recipient, uint256 amount) public timeLocked returns (bool) {
+    require(amount <= 100, "It's allowed to transfer less or equal 1 token");
     updateTimeLock(lockTimeInMinutes);
     return super.transfer(recipient, amount);
   }
 
   //and just add time lock for indirect token sending
   function transferFrom(address sender, address recipient, uint256 amount) public timeLocked returns (bool) {
+    require(amount <= 100, "It's allowed to transfer less or equal 1 token");
     updateTimeLock(lockTimeInMinutes);
     return super.transferFrom(sender, recipient, amount);
   }
