@@ -26,6 +26,7 @@ class App extends Component {
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = SimpleERC20TokenWithTimeLock.networks[networkId];
       const instance = new web3.eth.Contract(SimpleERC20TokenWithTimeLock.abi,deployedNetwork && deployedNetwork.address);
+      //TODO: initialize contract from Ropsten address
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
@@ -57,21 +58,12 @@ class App extends Component {
     console.log("transferToken!")
     const { accounts, contract } = this.state;
 
-    // Stores a given value, 16 by default.
-    // await contract.methods.set(16).send({ from: accounts[0] });
-    // console.log(tokenGeneratorContract);//todo clean
-
     // Get the value from the contract to prove it worked.
     const balanceOfAccount0 = await contract.methods.balanceOf(accounts[0]).call();
     const balanceOfAccount1 = await contract.methods.balanceOf(accounts[1]).call();
     const owner = await contract.methods.owner().call();
     const totalSupply = await contract.methods.totalSupply().call();
     const lastTokenGenerationEventDateTime = await contract .methods.getLastTokenGenerationDateTime().call();
-
-    console.log("lastTokenGenerationEventDateTime:");//todo clean
-    console.log(lastTokenGenerationEventDateTime);//todo clean
-    console.log("converted:");//todo clean
-    console.log(new Date(lastTokenGenerationEventDateTime*1000).toISOString());//todo clean
 
     // Update state with the result.
     this.setState({
@@ -104,7 +96,6 @@ class App extends Component {
 
           <br/>
           <button className="transferTokenButton" onClick={this.transferToken}>Transfer 1 token </button>
-
           <br/>
           <div>Balance of account0: {this.state.balanceOfAccount0} tokens</div>
           <br/>
