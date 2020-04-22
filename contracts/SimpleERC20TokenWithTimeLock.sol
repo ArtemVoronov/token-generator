@@ -34,4 +34,9 @@ contract SimpleERC20TokenWithTimeLock is SimpleERC20Token {
     updateTimeLock(lockTimeInMinutes);
     return super.transferFrom(sender, recipient, amount);
   }
+
+  function changeLockTime(uint _minutes) public onlyOwner { //for testing purposes
+    lockTimeInMinutes = _minutes;
+    lastTokenGenerationDateTime = now;
+  }
 }
