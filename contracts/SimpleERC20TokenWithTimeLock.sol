@@ -15,7 +15,7 @@ contract SimpleERC20TokenWithTimeLock is SimpleERC20Token {
   }
 
   modifier timeLocked {
-    require(now > lastTokenGenerationDateTime, "It is required to wait 20 minutes after last token generation event");
+    require(now > lastTokenGenerationDateTime, "TIME_LOCK_ERROR: it is required to wait 20 minutes after last token generation event");
     _;
   }
 
