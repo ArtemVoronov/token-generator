@@ -13,7 +13,9 @@ contracts/SimpleERC20TokenWithTimeLock.sol
 You will require to install the MetaMask extenstion in your browser. Then run the following commands in a terminal:
 ```
 git clone git@github.com:ArtemVoronov/token-generator.git
-cd token-generator/client
+cd token-generator
+npm install
+cd client
 npm install
 npm start
 ```
