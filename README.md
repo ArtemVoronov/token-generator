@@ -11,5 +11,6 @@ https://github.com/ArtemVoronov/token-generator/tree/master/client
 ```
 1. run ganache on localhost:7545
 2. cd /client
-3. npm run
+3. npm install
+4. npm start
 ```
